@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Contexts;
 using MiPrimerWebApiM3.Entities;
 using System.Collections.Generic;
@@ -14,15 +15,20 @@ namespace MiPrimerWebApiM3.Controllers
     public class AutoresController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-        public AutoresController(ApplicationDbContext context)
+        private readonly ILogger<AutoresController> logger;
+
+        public AutoresController(ApplicationDbContext context,
+            ILogger<AutoresController> logger)
         {
-            this.context = context; 
+            this.context = context;
+            this.logger = logger;
         }
 
         // GET api/autores
         [HttpGet]
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            logger.LogInformation("Obteniendo los actores");
             return context.Autores.Include(l => l.Libros).ToList();
         }
 
@@ -39,10 +45,12 @@ namespace MiPrimerWebApiM3.Controllers
         [HttpGet("{id}", Name = "ObtenerAutor")]
         public async Task<ActionResult<Autor>> Get(int id) 
         {
+            logger.LogDebug("Buscando autor de Id " + id.ToString());
             var autor = await context.Autores.Include(l => l.Libros).FirstOrDefaultAsync(a => a.Id == id);
 
             if (autor == null)
             {
+                logger.LogWarning($"El autor de Id {id} no ha sido encontrado");
                 return NotFound();
             }
 
