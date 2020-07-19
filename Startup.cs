@@ -20,6 +20,9 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /* Configuración para manejo de filtros cache */
+            services.AddResponseCaching();
+
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -40,6 +43,9 @@ namespace MiPrimerWebApiM3
             }
 
             app.UseHttpsRedirection();
+
+            /* Configuración para manejo de filtros cache */
+            app.UseResponseCaching();
 
             app.UseRouting();
 

@@ -23,6 +23,15 @@ namespace MiPrimerWebApiM3.Controllers
             _logger = logger;
         }
 
+        // Get WeatherForecast/Filtro
+        [HttpGet("Filtro")]
+        /* Ejemplo uso de filtro cache */
+        [ResponseCache(Duration = 15)]
+        public ActionResult<string> GetFiltro()
+        {
+            return DateTime.Now.Second.ToString();
+        }
+
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
