@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MiPrimerWebApiM3.Contexts;
 using MiPrimerWebApiM3.Entities;
+using MiPrimerWebApiM3.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,8 +28,10 @@ namespace MiPrimerWebApiM3.Controllers
 
         // GET api/autores
         [HttpGet]
+        [ServiceFilter(typeof(MiFiltroDeAccion))]
         public ActionResult<IEnumerable<Autor>> Get()
         {
+            throw new NotImplementedException();
             logger.LogInformation("Obteniendo los actores");
             return context.Autores.Include(l => l.Libros).ToList();
         }

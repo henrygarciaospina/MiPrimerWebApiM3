@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MiPrimerWebApiM3.Contexts;
+using MiPrimerWebApiM3.Helpers;
 
 namespace MiPrimerWebApiM3
 {
@@ -20,14 +21,23 @@ namespace MiPrimerWebApiM3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /* Configuración del filtros de acción */
+            services.AddScoped<MiFiltroDeAccion>();
+
             /* Configuración para manejo de filtros cache */
             services.AddResponseCaching();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            /* Configuración para corregir errores de referebcias ciclicas en las relaciones de las entities
-               como pasa con las entidades Libro y Autore.
+            /* Configuración para manejo de filtros de excepción */
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new MiFiltroDeExcepcion());
+            });
+
+            /* Configuración para corregir errores de referencias ciclicas en las relaciones de las entities
+               como pasa con las entidades Libro y Autor.
              */
             services.AddControllers()
                 .AddNewtonsoftJson(options => 
